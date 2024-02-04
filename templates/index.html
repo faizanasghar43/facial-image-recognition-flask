@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clockwise</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="/static/logo.png" alt="Clockwise Logo" class="logo">
+        <!-- Additional navigation or header content can go here -->
+    </header>
+    <div class="capture-section">
+        <h1>Look into the camera  and press capture to check out your last seen</h1>
+        <video id="video" width="640" height="320" autoplay></video>
+        <button id="snap">Capture</button>
+        <canvas id="canvas" width="640" height="320"></canvas>
+    </div>
+    <div class="info-section">
+        <div id="clock" class="clock">00:00:00</div>
+        <div id="userInfo" class="user-info">
+        </div>
+    </div>
+</div>
+
+<script>
+    // Digital clock functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        {#setInterval(updateClock, 1000);#}
+        {#updateClock();#}
+    });
+
+    function showUserInfo(username, lastSeen) {
+        // Convert lastSeen to a Date object
+        const lastSeenDate = new Date(lastSeen);
+        // Extract time components and pad them to ensure they are always two digits
+        const hours = String(lastSeenDate.getHours()).padStart(2, '0');
+        const minutes = String(lastSeenDate.getMinutes()).padStart(2, '0');
+        const seconds = String(lastSeenDate.getSeconds()).padStart(2, '0');
+        // Construct a time string
+        const lastSeenTime = `${hours}:${minutes}:${seconds}`;
+
+        // Update the innerHTML with the username and formatted last seen time
+    {#    document.getElementById('userInfo').innerHTML = `#}
+    {#    <div><strong>Username:</strong> ${username}</div>#}
+    {#    <div><strong>Last seen:</strong> ${lastSeenTime}</div>#}
+    {#`;#}
+         document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+    }
+
+
+    // Existing capture and send data functionality
+    let video = document.getElementById('video');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+    let snap = document.getElementById("snap");
+
+    navigator.mediaDevices.getUserMedia({video: true})
+        .then((stream) => video.srcObject = stream)
+        .catch(console.error);
+
+    snap.addEventListener("click", () => {
+        context.drawImage(video, 0, 0, 640, 480);
+        let imageDataUrl = canvas.toDataURL('image/png');
+        sendData(imageDataUrl);
+    });
+
+    function sendData(imageDataUrl) {
+        fetch('/process_image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({image: imageDataUrl})
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'found') {
+                    showUserInfo(data.username, data.last_seen);
+                } else if (data.status === 'not_found') {
+                    window.location.href = '/add_info'; // Redirect to add_info page
+                }
+            })
+            .catch(console.error);
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+input {
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 16px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
+video {
+    border-radius: 10px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: black;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.clock {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    font-size: 24px;
+    color: #333;
+    text-align: left;
+}
+
+canvas {
+    display: none;
+}
+
+.info-section {
+    background: black;
+}
+
+.clock {
+    position: absolute;
+    top: 93%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: #01080a;
+    font-size: 60px;
+    font-family: Orbitron;
+    letter-spacing: 7px;
+}
+
+.capture-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center-align the items vertically */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url("images/bg-img.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.logo {
+    height: 100px; /* Adjust based on your logo's aspect ratio */
+    width: auto;
+    background: #36bdca;
+}
